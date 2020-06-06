@@ -4,8 +4,8 @@ namespace App\Entity;
 
 use App\Repository\ProductCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Plate;
 
 /**
  * @ORM\Entity(repositoryClass=ProductCategoryRepository::class)
@@ -30,7 +30,7 @@ class ProductCategory
     private $slug;
 
     /**
-     * @ORM\OneToMany(targetEntity=Plate::class, mappedBy="product_category")
+     * @ORM\OneToMany(targetEntity="App\Entity\Plate", mappedBy="product_category")
      */
     private $plates;
 
@@ -68,10 +68,7 @@ class ProductCategory
         return $this;
     }
 
-    /**
-     * @return Collection|Plate[]
-     */
-    public function getPlates(): Collection
+    public function getPlates()
     {
         return $this->plates;
     }
@@ -79,23 +76,18 @@ class ProductCategory
     public function addPlate(Plate $plate): self
     {
         if (!$this->plates->contains($plate)) {
-            $this->plates[] = $plate;
+            $this->plates->add($plate);
             $plate->setProductCategory($this);
+            return $this;
         }
-
-        return $this;
     }
 
     public function removePlate(Plate $plate): self
     {
-        if ($this->plates->contains($plate)) {
-            $this->plates->removeElement($plate);
-            // set the owning side to null (unless already changed)
-            if ($plate->getProductCategory() === $this) {
-                $plate->setProductCategory(null);
-            }
+        if($this->plates->contains($plate)) {
+            $this->plates->remove($plate);
+            $plate->setProductCategory(null);
+            return $this;
         }
-
-        return $this;
     }
 }

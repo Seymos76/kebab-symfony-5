@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller;
 
+use App\DAO\PlatesDAO;
 use App\Repository\PlateRepository;
 use App\Repository\ProductCategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,9 +15,13 @@ class PublicController extends AbstractController {
      */
     public function homepage(
         PlateRepository $plateRepository,
-        ProductCategoryRepository $productCategoryRepository
+        ProductCategoryRepository $productCategoryRepository,
+        PlatesDAO $platesDAO
         )
     {
+        $dao = new PlatesDAO();
+        $allPlates = $dao->getAllPlatesByCategory($plateRepository);
+        dump($allPlates);
         $sandwiches = $plateRepository->findSandwiches();
         $hm = $plateRepository->findHomeMades();
         $fries = $plateRepository->findFries();
