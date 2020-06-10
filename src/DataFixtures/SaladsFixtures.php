@@ -36,6 +36,7 @@ class SaladsFixtures extends Fixture implements DependentFixtureInterface
         foreach ($saladData as $key => $value) {
             $salad = new Plate();
             $salad->setLabel($value['label']);
+            $salad->setSlug($value['label']);
             $salad->setPrice($value['price']);
             $category->addPlate($salad);
             $manager->persist($salad);

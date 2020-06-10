@@ -20,48 +20,13 @@ class PlateRepository extends ServiceEntityRepository
         parent::__construct($registry, Plate::class);
     }
 
-    private function findByCategory(int $category)
+    private function findByCategory(ProductCategory $category)
     {
         $query = $this->createQueryBuilder('p')
         ->where('p.product_category = :product_category')
         ->setParameter('product_category', $category)
         ->getQuery()->getResult();
         return $query;
-    }
-
-    public function findHomeMades()
-    {
-        return $this->findByCategory(1);
-    }
-
-    public function findSandwiches()
-    {
-        return $this->findByCategory(2);
-    }
-
-    public function findFries()
-    {
-        return $this->findByCategory(3);
-    }
-
-    public function findEntries()
-    {
-        return $this->findByCategory(4);
-    }
-
-    public function findSalads()
-    {
-        return $this->findByCategory(5);
-    }
-
-    public function findPlates()
-    {
-        return $this->findByCategory(6);
-    }
-
-    public function findDesserts()
-    {
-        return $this->findByCategory(7);
     }
 
     // /**

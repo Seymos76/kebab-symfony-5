@@ -6,6 +6,7 @@ use App\Repository\ProductCategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Plate;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductCategoryRepository::class)
@@ -21,11 +22,13 @@ class ProductCategory
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"public"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"public"})
      */
     private $slug;
 

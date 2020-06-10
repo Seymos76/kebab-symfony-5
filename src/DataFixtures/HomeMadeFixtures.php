@@ -26,6 +26,7 @@ class HomeMadeFixtures extends Fixture
         foreach ($homeMadeData as $key => $value) {
             $home_made = new Plate();
             $home_made->setLabel($value);
+            $home_made->setSlug($value);
             $category->addPlate($home_made);
             $manager->persist($home_made);
         }

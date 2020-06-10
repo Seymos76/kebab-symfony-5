@@ -36,6 +36,7 @@ class FriesFixtures extends Fixture implements DependentFixtureInterface
         foreach ($friesData as $key => $value) {
             $fries = new Plate();
             $fries->setLabel($value['label']);
+            $fries->setSlug($value['label']);
             $fries->setPrice($value['price']);
             $category->addPlate($fries);
             $manager->persist($fries);

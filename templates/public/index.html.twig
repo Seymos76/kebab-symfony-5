@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block body %}
-    {{ parent() }}
     <div class="container mx-auto">
         <img class="mx-auto" src="{{ asset('img/logo.png') }}" alt="logo" />
     </div>
@@ -21,11 +20,11 @@
 
     <div class="container border flex flex-col md:flex-row flex-wrap mx-auto">
       <div class="w-full md:w-7/10 lg:w-7/10 flex flex-row flex-wrap items-center justify-center">
-        {% include "variations/category/_categories_row.html.twig" %}
+        {% include "variations/category/_categories_row.html.twig" with {'categories': categories} %}
       </div>
       <div class="w-full md:w-full images grid grid-cols-1 sm:grid-cols-3 xs:gap-8 sm:gap-5">
         {# grid items #}
-        {% include "variations/grid/_grid_items_label.html.twig" %}
+        {% include "variations/grid/_grid_items_label.html.twig" with {'products': products} %}
       </div>
     </div>
 

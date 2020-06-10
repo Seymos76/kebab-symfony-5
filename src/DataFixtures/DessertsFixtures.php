@@ -36,6 +36,7 @@ class DessertsFixtures extends Fixture implements DependentFixtureInterface
         foreach ($dessertsData as $key => $value) {
             $dessert = new Plate();
             $dessert->setLabel($value['label']);
+            $dessert->setSlug($value['label']);
             $dessert->setPrice($value['price']);
             $category->addPlate($dessert);
             //$dessert->setProductCategory($category);

@@ -2,28 +2,34 @@
 
 namespace App\Entity;
 
+use App\Interfaces\SluggableInterface;
 use App\Repository\PlateRepository;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PlateRepository::class)
  */
-class Plate
+class Plate implements SluggableInterface
 {
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"public"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"public"})
      */
     protected $label;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"public"})
      */
     protected $price;
 
@@ -45,8 +51,15 @@ class Plate
     /**
      * @ORM\ManyToOne(targetEntity=ProductCategory::class, inversedBy="plates")
      * @ORM\JoinColumn(name="product_category_id", referencedColumnName="id")
+     * @Groups({"public"})
      */
     protected $product_category;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     * @Groups({"public"})
+     */
+    private $slug;
 
     public function getId(): ?int
     {
@@ -123,5 +136,18 @@ class Plate
         $this->product_category = $product_category;
 
         return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): string
+    {
+        $slugger = new Slugify();
+        $this->slug = $slugger->slugify($slug);
+
+        return $this->slug;
     }
 }

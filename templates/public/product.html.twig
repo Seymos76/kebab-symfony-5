@@ -1,0 +1,12 @@
+{% extends 'base_saasland.html.twig' %}
+
+{% block title %}Produit unique{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    {% include "variations/product/product_row.html.twig" %}
+{% endblock %}

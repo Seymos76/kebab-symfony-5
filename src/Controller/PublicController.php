@@ -1,7 +1,6 @@
 <?php
 namespace App\Controller;
 
-use App\DAO\PlatesDAO;
 use App\Repository\PlateRepository;
 use App\Repository\ProductCategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -15,26 +14,27 @@ class PublicController extends AbstractController {
      */
     public function homepage(
         PlateRepository $plateRepository,
-        ProductCategoryRepository $productCategoryRepository,
-        PlatesDAO $platesDAO
+        ProductCategoryRepository $productCategoryRepository
         )
     {
-        $dao = new PlatesDAO();
-        $allPlates = $dao->getAllPlatesByCategory($plateRepository);
-        dump($allPlates);
-        $sandwiches = $plateRepository->findSandwiches();
-        $hm = $plateRepository->findHomeMades();
-        $fries = $plateRepository->findFries();
-        $entries = $plateRepository->findEntries();
-        $salads = $plateRepository->findSalads();
-        $plates = $plateRepository->findPlates();
-        $desserts = $plateRepository->findDesserts();
         $categories = $productCategoryRepository->findAll();
+        dump($plateRepository->findAll());
         return $this->render(
             'public/index.html.twig',
             [
-                'categories' => $categories
+                'categories' => $categories,
+                'products' => $plateRepository->findAll()
             ]
+        );
+    }
+
+    /**
+     * @Route(path="/product/", name="public_product")
+     */
+    public function product()
+    {
+        return $this->render(
+            'public/product.html.twig'
         );
     }
 }

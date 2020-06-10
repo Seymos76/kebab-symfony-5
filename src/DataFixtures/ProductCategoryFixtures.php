@@ -2,32 +2,38 @@
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
-use Doctrine\Common\DataFixtures\DependentFixtureInterface;
+use App\DataFixtures\ProductCategoryFactory;
 use Doctrine\Common\Persistence\ObjectManager;
 
 class ProductCategoryFixtures extends Fixture
 {
+    private $productCategoryFactory;
+
+    public function __construct(ProductCategoryFactory $productCategoryFactory)
+    {
+        $this->productCategoryFactory = $productCategoryFactory;
+    }
     public function load(ObjectManager $manager)
     {
-        $homeMade = ProductCategoryFactory::createProductCategory('home made');
+        $homeMade = $this->productCategoryFactory->createProductCategory('home made');
         $manager->persist($homeMade);
 
-        $sandwich = ProductCategoryFactory::createProductCategory('Sandwich');
+        $sandwich = $this->productCategoryFactory->createProductCategory('Sandwich');
         $manager->persist($sandwich);
 
-        $fries = ProductCategoryFactory::createProductCategory('Frites');
+        $fries = $this->productCategoryFactory->createProductCategory('Frites');
         $manager->persist($fries);
 
-        $entries = ProductCategoryFactory::createProductCategory('Entrées');
+        $entries = $this->productCategoryFactory->createProductCategory('Entrées');
         $manager->persist($entries);
 
-        $salads = ProductCategoryFactory::createProductCategory('Salades');
+        $salads = $this->productCategoryFactory->createProductCategory('Salades');
         $manager->persist($salads);
 
-        $plats = ProductCategoryFactory::createProductCategory('Plats');
+        $plats = $this->productCategoryFactory->createProductCategory('Plats');
         $manager->persist($plats);
 
-        $desserts = ProductCategoryFactory::createProductCategory('Desserts');
+        $desserts = $this->productCategoryFactory->createProductCategory('Desserts');
         $manager->persist($desserts);
         
         $manager->flush();

@@ -39,6 +39,7 @@ class SandwichFixtures extends Fixture implements DependentFixtureInterface
         foreach ($sandwichData as $key => $value) {
             $sandwich = new Plate();
             $sandwich->setLabel($value['label']);
+            $sandwich->setSlug($value['label']);
             $sandwich->setSupport($value['support']);
             $sandwich->setFormula($value['formula']);
             $category->addPlate($sandwich);

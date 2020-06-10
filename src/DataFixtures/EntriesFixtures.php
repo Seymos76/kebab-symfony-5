@@ -37,6 +37,7 @@ class EntriesFixtures extends Fixture implements DependentFixtureInterface
         foreach ($entryData as $key => $value) {
             $entry = new Plate();
             $entry->setLabel($value['label']);
+            $entry->setSlug($value['label']);
             $entry->setPrice($value['price']);
             $category->addPlate($entry);
             $manager->persist($entry);

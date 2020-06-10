@@ -1,0 +1,24 @@
+{% extends 'base_saasland.html.twig' %}
+
+{% block title %}Panier de commande{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% set products = ordering.products %}
+
+{% block body %}
+    <h1>Mon panier</h1>
+    {% if products|length > 0 %}
+        {% for p in ordering.products %}
+            {{ dump(p) }}
+        {% endfor %}
+    {% else %}
+    Votre panier est vide.
+    {% endif %}
+    <p>Montant de la commande: {{ ordering.amount }} €</p>
+    {% set total_tva = constant('App\\Ecommerce\\Ordering\\Ordering::TVA') * ordering.amount %}
+    <p>TVA: {{ total_tva }} {{ constant('App\\Ecommerce\\Ordering\\Ordering::TVA') }}</p>
+    <p>Total TTC: {{ ordering.ttc }} € </p>
+{% endblock %}

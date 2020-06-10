@@ -6,13 +6,23 @@ use Cocur\Slugify\Slugify;
 
 class ProductCategoryFactory
 {
-    public static function createProductCategory(string $label): ProductCategory
+    private $slugger;
+
+    public function __construct()
+    {
+        $this->slugger = new Slugify();
+    }
+
+    public function createProductCategory(string $label): ProductCategory
     {
         $category = new ProductCategory();
         $category->setLabel($label);
-        $slugger = new Slugify();
-        $slugged = $slugger->slugify($label);
-        $category->setSlug($slugged);
+        $category->setSlug($this->getStrSlug($label));
         return $category;
+    }
+
+    private function getStrSlug(string $string)
+    {
+        return $this->slugger->slugify($string);
     }
 }
