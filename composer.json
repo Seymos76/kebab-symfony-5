@@ -9,6 +9,7 @@
         "doctrine/doctrine-fixtures-bundle": "^3.3",
         "nelmio/cors-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.1",
+        "symfony/apache-pack": "^1.0",
         "symfony/asset": "5.1.*",
         "symfony/console": "5.1.*",
         "symfony/dotenv": "5.1.*",
@@ -69,7 +70,6 @@
     },
     "scripts": {
         "auto-scripts": {
-            "doctrine:database:create": "symfony-cmd",
             "doctrine:schema:update --force": "symfony-cmd",
             "doctrine:fixtures:load --no-interaction": "symfony-cmd",
             "cache:clear": "symfony-cmd",
