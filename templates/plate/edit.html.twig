@@ -1,0 +1,13 @@
+{% extends 'base_saasland.html.twig' %}
+
+{% block title %}Edit Plate{% endblock %}
+
+{% block body %}
+    <h1>Edit Plate</h1>
+
+    {{ include('plate/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('plate_index') }}">back to list</a>
+
+    {{ include('plate/_delete_form.html.twig') }}
+{% endblock %}

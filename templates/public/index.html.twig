@@ -61,15 +61,6 @@
         <div class="float-left w-1/3">Colonne ici</div>
         <div class="float-left w-1/3">Colonne ici</div>
     </div>#}
-    {% for category in categories %}
-        {{ category.label|upper }}
-        Plats :
-        <ul>
-        {% for p in category.plates %}
-            <li>{{ p.label }}</li>
-        {% endfor %}
-        </ul>
-    {% endfor %}
 {% endblock %}
 
 {% block javascripts %}

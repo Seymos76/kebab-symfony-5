@@ -7,35 +7,28 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=HomeMadeRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
-class HomeMade extends Plate
+class HomeMade extends AbstractPlate
 {
+    use PlatesTrait;
+
+    const TYPE = "HOMEMADE";
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $image;
+    public function __construct()
+    {
+        $this->type = self::TYPE;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getImage(): ?string
-    {
-        return $this->image;
-    }
-
-    public function setImage(?string $image): self
-    {
-        $this->image = $image;
-
-        return $this;
-    }
 }

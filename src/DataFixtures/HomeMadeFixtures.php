@@ -3,7 +3,8 @@
 namespace App\DataFixtures;
 
 use App\Entity\HomeMade;
-use App\Entity\Plate;
+use App\Entity\AbstractPlate;
+use App\Entity\ProductCategory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 
@@ -16,7 +17,6 @@ class HomeMadeFixtures extends Fixture
     }
 
     private function loadHomeMade(ObjectManager $manager) {
-        $category = $this->getReference('home_made');
         $homeMadeData = [
             "Le KeBab",
             "L'assiette Baba",
@@ -24,10 +24,8 @@ class HomeMadeFixtures extends Fixture
         ];
 
         foreach ($homeMadeData as $key => $value) {
-            $home_made = new Plate();
+            $home_made = new HomeMade();
             $home_made->setLabel($value);
-            $home_made->setSlug($value);
-            $category->addPlate($home_made);
             $manager->persist($home_made);
         }
     }

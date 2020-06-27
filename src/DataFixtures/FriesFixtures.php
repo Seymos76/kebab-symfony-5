@@ -2,7 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Plate;
+use App\Entity\Chips;
+use App\Entity\AbstractPlate;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -17,7 +18,6 @@ class FriesFixtures extends Fixture implements DependentFixtureInterface
 
     private function loadFries(ObjectManager $manager)
     {
-        $category = $this->getReference('fries');
         $friesData = [
             [
                 'label' => "Petite frite",
@@ -34,11 +34,9 @@ class FriesFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         foreach ($friesData as $key => $value) {
-            $fries = new Plate();
+            $fries = new Chips();
             $fries->setLabel($value['label']);
-            $fries->setSlug($value['label']);
             $fries->setPrice($value['price']);
-            $category->addPlate($fries);
             $manager->persist($fries);
         }
     }

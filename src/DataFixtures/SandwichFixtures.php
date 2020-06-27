@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Plate;
+use App\Entity\AbstractPlate;
 use App\Entity\Sandwich;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
@@ -17,7 +17,6 @@ class SandwichFixtures extends Fixture implements DependentFixtureInterface
     }
 
     private function loadSandwich(ObjectManager $manager) {
-        $category = $this->getReference('sandwich');
         $sandwichData = [
             [
                 'label' => "Le Kebab",
@@ -37,12 +36,10 @@ class SandwichFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         foreach ($sandwichData as $key => $value) {
-            $sandwich = new Plate();
+            $sandwich = new Sandwich();
             $sandwich->setLabel($value['label']);
-            $sandwich->setSlug($value['label']);
             $sandwich->setSupport($value['support']);
             $sandwich->setFormula($value['formula']);
-            $category->addPlate($sandwich);
             $manager->persist($sandwich);
         }
     }

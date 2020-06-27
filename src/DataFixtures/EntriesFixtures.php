@@ -2,7 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Plate;
+use App\Entity\Entry;
+use App\Entity\AbstractPlate;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -17,7 +18,6 @@ class EntriesFixtures extends Fixture implements DependentFixtureInterface
 
     private function loadEntries(ObjectManager $manager)
     {
-        $category = $this->getReference('entries');
         $entryData = [
             [
                 'label' => "Cacik",
@@ -32,14 +32,11 @@ class EntriesFixtures extends Fixture implements DependentFixtureInterface
                 'price' => 7.5
             ],
         ];
-        //$category = $this->getReference('entries');
 
         foreach ($entryData as $key => $value) {
-            $entry = new Plate();
+            $entry = new Entry();
             $entry->setLabel($value['label']);
-            $entry->setSlug($value['label']);
             $entry->setPrice($value['price']);
-            $category->addPlate($entry);
             $manager->persist($entry);
         }
     }

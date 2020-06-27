@@ -1,0 +1,54 @@
+{% extends 'base_saasland.html.twig' %}
+
+{% block title %}Plate{% endblock %}
+
+{% block body %}
+    <h1>Plate</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ plate.id }}</td>
+            </tr>
+            <tr>
+                <th>Type</th>
+                <td>{{ plate.type }}</td>
+            </tr>
+            <tr>
+                <th>Label</th>
+                <td>{{ plate.label }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ plate.price }}</td>
+            </tr>
+            <tr>
+                <th>YourChoice</th>
+                <td>{{ plate.yourChoice }}</td>
+            </tr>
+            <tr>
+                <th>Support</th>
+                <td>{{ plate.support }}</td>
+            </tr>
+            <tr>
+                <th>Formula</th>
+                <td>{{ plate.formula }}</td>
+            </tr>
+            <tr>
+                <th>Image</th>
+                <td><img src="{{ plate.image }}" alt="image" height="80"></td>
+            </tr>
+            <tr>
+                <th>ExtraCost</th>
+                <td>{{ plate.extraCost }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('plate_index') }}">back to list</a>
+
+    <a href="{{ path('plate_edit', {'id': plate.id}) }}">edit</a>
+
+    {{ include('plate/_delete_form.html.twig') }}
+{% endblock %}

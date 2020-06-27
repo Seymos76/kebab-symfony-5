@@ -12,7 +12,7 @@ use App\Ecommerce\Ordering\OrderingInterface;
 /**
  * @ORM\Entity(repositoryClass=OrderingRepository::class)
  */
-class Ordering implements OrderingInterface
+class Ordering extends AbstractOrdering implements OrderingInterface
 {
     /**
      * @ORM\Id()

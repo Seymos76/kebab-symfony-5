@@ -1,0 +1,41 @@
+{% extends 'base_saasland.html.twig' %}
+
+{% block title %}Plate index{% endblock %}
+
+{% block body %}
+    <h1>Plate index</h1>
+
+    {% if plates|length > 0 %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Label</th>
+                <th>Image</th>
+                <th>actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for plate in plates %}
+                <tr>
+                    <td>{{ plate.id }}</td>
+                    <td>{{ plate.type }}</td>
+                    <td>{{ plate.label }}</td>
+                    <td><img src="{{ plate.image }}" alt="plate" height="80"></td>
+                    <td>
+                        <a href="{{ path('plate_show', {'id': plate.id}) }}">show</a>
+                        <a href="">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <a href="{{ path('plate_new') }}">Create new</a>
+{% endblock %}

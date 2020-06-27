@@ -17,12 +17,10 @@ class PublicController extends AbstractController {
         ProductCategoryRepository $productCategoryRepository
         )
     {
-        $categories = $productCategoryRepository->findAll();
-        dump($plateRepository->findAll());
         return $this->render(
             'public/index.html.twig',
             [
-                'categories' => $categories,
+                'categories' => $productCategoryRepository->findAll(),
                 'products' => $plateRepository->findAll()
             ]
         );
@@ -35,6 +33,16 @@ class PublicController extends AbstractController {
     {
         return $this->render(
             'public/product.html.twig'
+        );
+    }
+
+    /**
+     * @Route(path="/pwa", name="public_pwa")
+     */
+    public function pwa()
+    {
+        return $this->render(
+            'base_pwa.html.twig'
         );
     }
 }

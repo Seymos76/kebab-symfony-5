@@ -8,35 +8,41 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
+/**
+ * @Route("/api")
+ */
 class ApiController extends AbstractController
 {
+    protected $serializer;
+
+    public function __construct(SerializerInterface $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     /**
-     * @Route(path="/api/plates", name="api_plates")
+     * @Route(path="/plates", name="api_plates")
      *
      * @param PlateRepository $plateRepository
-     * @param Serializer $serializer
      * @return JsonResponse
      */
-    public function getAllPlates(PlateRepository $plateRepository, 
-    SerializerInterface $serializer)
+    public function getAllPlates(PlateRepository $plateRepository)
     {
         $plates = $plateRepository->findAll();
-        $data = $serializer->serialize($plates, 'json', ['groups' => 'public']);
+        $data = $this->serializer->serialize($plates, 'json', ['groups' => 'public']);
         return new JsonResponse($data, 200, [], true);
     }
 
     /**
-     * @Route(path="/api/categories", name="api_categories")
+     * @Route(path="/categories", name="api_categories")
      *
      * @param ProductCategoryRepository $categoryRepository
-     * @param Serializer $serializer
      * @return JsonResponse
      */
-    public function getAllCategories(ProductCategoryRepository $categoryRepository, 
-    SerializerInterface $serializer)
+    public function getAllCategories(ProductCategoryRepository $categoryRepository)
     {
         $plates = $categoryRepository->findAll();
-        $data = $serializer->serialize($plates, 'json', ['groups' => 'public']);
+        $data = $this->serializer->serialize($plates, 'json', ['groups' => 'public']);
         return new JsonResponse($data, 200, [], true);
     }
 }

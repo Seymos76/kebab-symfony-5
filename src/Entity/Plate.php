@@ -2,152 +2,52 @@
 
 namespace App\Entity;
 
-use App\Interfaces\SluggableInterface;
 use App\Repository\PlateRepository;
 use Cocur\Slugify\Slugify;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass=PlateRepository::class)
+ *
+ * @ORM\InheritanceType("SINGLE_TABLE")
+ * @ORM\DiscriminatorColumn(name="discr", type="string")
+ * @ORM\DiscriminatorMap({
+ *     "plate" = "Plate",
+ *     "box" = "Box",
+ *     "chips" = "Chips",
+ *     "dessert" = "Dessert",
+ *     "entry" = "Entry",
+ *     "formula" = "Formula",
+ *     "homemade" = "HomeMade",
+ *     "salad" = "Salad",
+ *     "sandwich" = "Sandwich"
+ * })
  */
-class Plate implements SluggableInterface
+class Plate extends AbstractPlate
 {
+    use PlatesTrait;
+
+    const TYPE = "PLATE";
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
-     * @Groups({"public"})
      */
-    private $id;
+    protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"public"})
-     */
-    protected $label;
-
-    /**
-     * @ORM\Column(type="float", nullable=true)
-     * @Groups({"public"})
-     */
-    protected $price;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $yourChoice;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $support;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    protected $formula;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=ProductCategory::class, inversedBy="plates")
-     * @ORM\JoinColumn(name="product_category_id", referencedColumnName="id")
-     * @Groups({"public"})
-     */
-    protected $product_category;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"public"})
-     */
-    private $slug;
+    public function __construct()
+    {
+        $this->type = self::TYPE;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getLabel(): ?string
+    public function getType(): ?string
     {
-        return $this->label;
-    }
-
-    public function setLabel(string $label): self
-    {
-        $this->label = $label;
-
-        return $this;
-    }
-
-    public function getPrice(): ?float
-    {
-        return $this->price;
-    }
-
-    public function setPrice(?float $price): self
-    {
-        $this->price = $price;
-
-        return $this;
-    }
-
-    public function getYourChoice(): ?string
-    {
-        return $this->yourChoice;
-    }
-
-    public function setYourChoice(?string $yourChoice): self
-    {
-        $this->yourChoice = $yourChoice;
-
-        return $this;
-    }
-
-    public function getSupport(): ?string
-    {
-        return $this->support;
-    }
-
-    public function setSupport(?string $support): self
-    {
-        $this->support = $support;
-
-        return $this;
-    }
-
-    public function getFormula(): ?string
-    {
-        return $this->formula;
-    }
-
-    public function setFormula(?string $formula): self
-    {
-        $this->formula = $formula;
-
-        return $this;
-    }
-
-    public function getProductCategory(): ?ProductCategory
-    {
-        return $this->product_category;
-    }
-
-    public function setProductCategory(?ProductCategory $product_category): self
-    {
-        $this->product_category = $product_category;
-
-        return $this;
-    }
-
-    public function getSlug(): ?string
-    {
-        return $this->slug;
-    }
-
-    public function setSlug(string $slug): string
-    {
-        $slugger = new Slugify();
-        $this->slug = $slugger->slugify($slug);
-
-        return $this->slug;
+        return $this->type;
     }
 }

@@ -7,35 +7,27 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BoxRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
-class Box
+class Box extends AbstractPlate
 {
+    use PlatesTrait;
+
+    const TYPE = "BOX";
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $extraCost;
+    public function __construct()
+    {
+        $this->type = self::TYPE;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getExtraCost(): ?string
-    {
-        return $this->extraCost;
-    }
-
-    public function setExtraCost(?string $extraCost): self
-    {
-        $this->extraCost = $extraCost;
-
-        return $this;
     }
 }

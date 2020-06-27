@@ -1,5 +1,6 @@
 {% for c in categories %}
-<div class="w-2/12 md:w-2/12 xl:w-1/12 text-black flex flex-col items-center justify-center xs:mb-20 sm:mb-10 md:mb-10 lg:mb-10 border rounded border-blue-400 bg-transparent mx-auto">
+    {% set w = categories|length %}
+<div class="w-2/12 md:w-{{ w }}/12 xl:w-1/12 text-black flex flex-col items-center justify-center xs:mb-20 sm:mb-10 md:mb-10 lg:mb-10 border rounded border-blue-400 bg-transparent mx-auto">
     <img width="50" class="ml-2 mx-2" src="{{ asset('img/category/sandwich.svg') }}"/>
     <span class="ml-2 text-sm">{{ c.label|upper }}</span>
 </div>

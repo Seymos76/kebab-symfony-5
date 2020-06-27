@@ -8,17 +8,26 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=FormulaRepository::class)
  */
-class Formula
+class Formula extends AbstractPlate
 {
+    use PlatesTrait;
+
+    const TYPE = "FORMULA";
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    protected $id;
+
+    public function __construct()
+    {
+        $this->type = self::TYPE;
+    }
 
     public function getId(): ?int
     {
         return $this->id;
     }
+
 }

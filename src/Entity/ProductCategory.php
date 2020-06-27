@@ -2,17 +2,19 @@
 
 namespace App\Entity;
 
+use App\Interfaces\SluggableInterface;
 use App\Repository\ProductCategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Plate;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ProductCategoryRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class ProductCategory
 {
+    use PlatesTrait;
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -32,14 +34,12 @@ class ProductCategory
      */
     private $slug;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Plate", mappedBy="product_category")
-     */
-    private $plates;
-
-    public function __construct()
+    public static function create(string $label): ProductCategory
     {
-        $this->plates = new ArrayCollection();
+        $category = new self();
+        $category->setLabel($label);
+        $category->setSlug($category->getStringSlug($label));
+        return $category;
     }
 
     public function getId(): ?int
@@ -64,33 +64,10 @@ class ProductCategory
         return $this->slug;
     }
 
-    public function setSlug(string $slug): self
+    public function setSlug(?string $slug): self
     {
-        $this->slug = $slug;
+        $this->slug = $this->getStringSlug($slug);
 
         return $this;
-    }
-
-    public function getPlates()
-    {
-        return $this->plates;
-    }
-
-    public function addPlate(Plate $plate): self
-    {
-        if (!$this->plates->contains($plate)) {
-            $this->plates->add($plate);
-            $plate->setProductCategory($this);
-            return $this;
-        }
-    }
-
-    public function removePlate(Plate $plate): self
-    {
-        if($this->plates->contains($plate)) {
-            $this->plates->remove($plate);
-            $plate->setProductCategory(null);
-            return $this;
-        }
     }
 }

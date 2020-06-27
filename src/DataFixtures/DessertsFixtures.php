@@ -2,7 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Plate;
+use App\Entity\Dessert;
+use App\Entity\AbstractPlate;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -31,15 +32,10 @@ class DessertsFixtures extends Fixture implements DependentFixtureInterface
                 'price' => 3
             ],
         ];
-        $category = $this->getReference('desserts');
 
         foreach ($dessertsData as $key => $value) {
-            $dessert = new Plate();
-            $dessert->setLabel($value['label']);
-            $dessert->setSlug($value['label']);
+            $dessert = new Dessert($value['label']);
             $dessert->setPrice($value['price']);
-            $category->addPlate($dessert);
-            //$dessert->setProductCategory($category);
             $manager->persist($dessert);
         }
     }

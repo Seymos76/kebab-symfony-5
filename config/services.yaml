@@ -4,6 +4,7 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    upload_plates: '%kernel.project_dir%/public/uploads/plates'
 
 services:
     # default configuration for services in *this* file
@@ -22,9 +23,11 @@ services:
     App\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
-    
+
     Symfony\Component\DependencyInjection\Container: ~
+    App\Command\:
+        resource: '../src/Command'
+        tags: ['console.command', 'kernel']
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    

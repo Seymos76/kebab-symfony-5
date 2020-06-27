@@ -1,9 +1,13 @@
 {
     "devDependencies": {
+        "@babel/preset-react": "^7.10.1",
         "@symfony/webpack-encore": "^0.30.0",
         "core-js": "^3.0.0",
+        "node-sass": "^4.14.1",
         "postcss-loader": "^3.0.0",
         "regenerator-runtime": "^0.13.2",
+        "sass-loader": "^8.0.2",
+        "style-loader": "^1.2.1",
         "webpack-notifier": "^1.6.0"
     },
     "license": "UNLICENSED",
@@ -16,6 +20,10 @@
     },
     "dependencies": {
         "autoprefixer": "^9.8.0",
+        "fs": "0.0.1-security",
+        "prop-types": "^15.7.2",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
         "tailwindcss": "^1.4.6"
     }
 }

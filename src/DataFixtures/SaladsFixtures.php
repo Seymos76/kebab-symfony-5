@@ -2,7 +2,7 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Plate;
+use App\Entity\Salad;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -31,14 +31,11 @@ class SaladsFixtures extends Fixture implements DependentFixtureInterface
                 'price' => 7.5
             ],
         ];
-        $category = $this->getReference('salads');
 
         foreach ($saladData as $key => $value) {
-            $salad = new Plate();
+            $salad = Salad::create();
             $salad->setLabel($value['label']);
-            $salad->setSlug($value['label']);
             $salad->setPrice($value['price']);
-            $category->addPlate($salad);
             $manager->persist($salad);
         }
     }

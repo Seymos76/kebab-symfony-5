@@ -13,7 +13,7 @@ class ProductCategoryFactory
         $this->slugger = new Slugify();
     }
 
-    public function createProductCategory(string $label): ProductCategory
+    public function create(string $label): ProductCategory
     {
         $category = new ProductCategory();
         $category->setLabel($label);

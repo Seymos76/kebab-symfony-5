@@ -31,14 +31,11 @@ class PlatesFixtures extends Fixture implements DependentFixtureInterface
                 'price' => 11
             ],
         ];
-        $category = $this->getReference('plats');
 
         foreach ($platesData as $key => $value) {
             $plate = new Plate();
             $plate->setLabel($value['label']);
-            $plate->setSlug($value['label']);
             $plate->setPrice($value['price']);
-            $category->addPlate($plate);
             $manager->persist($plate);
         }
     }

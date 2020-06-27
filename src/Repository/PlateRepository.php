@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Plate;
-use App\Entity\ProductCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -18,15 +17,6 @@ class PlateRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Plate::class);
-    }
-
-    private function findByCategory(ProductCategory $category)
-    {
-        $query = $this->createQueryBuilder('p')
-        ->where('p.product_category = :product_category')
-        ->setParameter('product_category', $category)
-        ->getQuery()->getResult();
-        return $query;
     }
 
     // /**
