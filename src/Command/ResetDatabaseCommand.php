@@ -38,13 +38,40 @@ class ResetDatabaseCommand extends Command
         $this->dropDatabase();
         $output->writeln("Suppression successful.");
         // create db
-        $this->createDatabase($output);
+        $this->createDatabase();
         $output->writeln("Database created.");
         // update schema
         $this->updateSchema();
         $output->writeln("Schema updated.");
         // load fixtures
+        $this->loadFixtures();
+        $output->writeln("Fixtures loaded.");
         return Command::SUCCESS;
+    }
+
+    private function runCmd(OutputInterface $output, string $name, bool $force)
+    {
+        if ($force) {
+            $console = new Application($this->kernel);
+            $console->setAutoExit(false);
+            $input = new ArrayInput([
+                'command' => $name,
+                '-f' => $force
+            ]);
+            $ouput = new BufferedOutput();
+            $console->run($input, $ouput);
+            $content = $ouput->fetch();
+            dump($content);
+        } else {
+            $command = $this->getApplication()->find('doctrine:fixtures:load');
+            $args = [
+                '-n' => $force
+            ];
+            $input = new ArrayInput($args);
+            $returnCode = $command->run($input, $output);
+            dump($returnCode);
+            return Command::SUCCESS;
+        }
     }
 
     protected function dropDatabase()
@@ -55,20 +82,21 @@ class ResetDatabaseCommand extends Command
             'command' => 'doctrine:database:drop',
             '-f' => true
         ]);
-
         $ouput = new BufferedOutput();
         $console->run($input, $ouput);
-        $content = $ouput->fetch();
-        dump($content);
+        $message = $ouput->fetch();
+        return getenv('APP_ENV') !== 'prod' ?? $message;
     }
 
-    protected function createDatabase(OutputInterface $output)
+    protected function createDatabase()
     {
         $command = $this->getApplication()->find('doctrine:database:create');
-        $args = [];
+        $args = [
+            'command' => 'doctrine:database:create'
+        ];
         $input = new ArrayInput($args);
-        $returnCode = $command->run($input, $output);
-        dump($returnCode);
+        $ouput = new BufferedOutput();
+        $returnCode = $command->run($input, $ouput);
         return Command::SUCCESS;
     }
 
@@ -83,7 +111,21 @@ class ResetDatabaseCommand extends Command
         $ouput = new BufferedOutput();
         $console->run($input, $ouput);
         $content = $ouput->fetch();
-        dump($content);
+        return Command::SUCCESS;
+    }
+
+    protected function loadFixtures()
+    {
+        $console = new Application($this->kernel);
+        $console->setAutoExit(false);
+        $input = new ArrayInput([
+            'command' => 'doctrine:fixtures:load',
+            '-n' => true
+        ]);
+
+        $ouput = new BufferedOutput();
+        $console->run($input, $ouput);
+        $message = $ouput->fetch();
         return Command::SUCCESS;
     }
 }
