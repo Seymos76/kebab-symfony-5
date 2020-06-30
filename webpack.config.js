@@ -1,3 +1,4 @@
+require('dotenv').config();
 var Encore = require('@symfony/webpack-encore');
 
 // Manually configure the runtime environment if not already configured yet by the "encore" command.
@@ -17,9 +18,7 @@ Encore
     })
     // only needed for CDN's or sub-directory deploy
     //.setManifestKeyPrefix('build/')
-    .addEntry('app', './assets/js/app.js')
     .addEntry('pwa', './assets/js/pwa.js')
-    .addEntry('bootstrap_layout', './assets/js/bootstrap_layout.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
     // will require an extra script tag for runtime.js
@@ -50,5 +49,8 @@ Encore
     // uncomment if you use API Platform Admin (composer req api-admin)
     .enableReactPreset()
 ;
+Encore.configureDefinePlugin(options => {
+    options["process.env"].API_URL = process.env.API_URL;
+});
 
 module.exports = Encore.getWebpackConfig();
