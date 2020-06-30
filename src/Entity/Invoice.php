@@ -24,6 +24,17 @@ class Invoice extends Ordering
      */
     private $ordering;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pdf;
+
+    public function __construct(Ordering $ordering)
+    {
+        parent::__construct();
+        $this->ordering = $ordering;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -37,6 +48,18 @@ class Invoice extends Ordering
     public function setOrdering(?Ordering $ordering): self
     {
         $this->ordering = $ordering;
+
+        return $this;
+    }
+
+    public function getPdf(): ?string
+    {
+        return $this->pdf;
+    }
+
+    public function setPdf(string $pdf): self
+    {
+        $this->pdf = $pdf;
 
         return $this;
     }

@@ -30,8 +30,6 @@ class CartActionsController extends AbstractController
         $requestContent = $request->getContent();
         // deserialize content
         $deserialized = json_decode($requestContent, false);
-        //$deserialized = $this->serializer->deserialize($requestContent, '', 'json', $context = []);
-        //dd($deserialized);
         // create order OR get current ordering by number
         $ordering = new Ordering();
         // add product if not in array
@@ -56,8 +54,8 @@ class CartActionsController extends AbstractController
     {
         $orderingNumber = $request->attributes->get('number');
         $ordering = $orderingRepository->findOneBy(['number' => $orderingNumber]);
-        dd($ordering);
-        return $this->json($orderingNumber, 200, [], ['groups' => ['public']]);
+        //$serializedOrdering = $this->serializer->serialize($ordering, 'json', ['groups' => 'cart']);
+        return $this->json($ordering, 200, [], ['groups' => ['cart']]);
     }
 
     /**

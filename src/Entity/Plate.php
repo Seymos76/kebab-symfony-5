@@ -2,8 +2,12 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
+use App\Interfaces\ProductInterface;
 use App\Repository\PlateRepository;
 use Cocur\Slugify\Slugify;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 
@@ -23,12 +27,12 @@ use Doctrine\ORM\Mapping as ORM;
  *     "salad" = "Salad",
  *     "sandwich" = "Sandwich"
  * })
+ * @ApiResource()
  */
-class Plate extends AbstractPlate
+class Plate extends AbstractPlate implements ProductInterface
 {
-    use PlatesTrait;
-
     const TYPE = "PLATE";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -36,9 +40,15 @@ class Plate extends AbstractPlate
      */
     protected $id;
 
+    /**
+     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $cartItems;
+
     public function __construct()
     {
         $this->type = self::TYPE;
+        $this->cartItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,4 +60,46 @@ class Plate extends AbstractPlate
     {
         return $this->type;
     }
+
+    public function isAvailable(): bool
+    {
+        return true;
+    }
+
+    public function typeOf(): string
+    {
+        return self::TYPE;
+    }
+
+    /**
+     * @return Collection|CartItem[]
+     */
+    public function getCartItems(): Collection
+    {
+        return $this->cartItems;
+    }
+
+    public function addCartItem(CartItem $cartItem): self
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems[] = $cartItem;
+            $cartItem->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCartItem(CartItem $cartItem): self
+    {
+        if ($this->cartItems->contains($cartItem)) {
+            $this->cartItems->removeElement($cartItem);
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getProduct() === $this) {
+                $cartItem->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

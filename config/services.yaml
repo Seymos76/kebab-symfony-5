@@ -25,6 +25,8 @@ services:
         tags: ['controller.service_arguments']
 
     Symfony\Component\DependencyInjection\Container: ~
+    Symfony\Component\Console\Output\OutputInterface: ~
+    App\EventSubscriber\SettingDebugToolbarEventSubscriber: ~
     App\Command\:
         resource: '../src/Command'
         tags: ['console.command', 'kernel']

@@ -2,13 +2,14 @@
 
 namespace App\Entity;
 
+use App\Interfaces\ProductInterface;
 use App\Repository\SandwichRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=SandwichRepository::class)
  */
-class Sandwich extends AbstractPlate
+class Sandwich extends AbstractPlate implements ProductInterface
 {
     use PlatesTrait;
 
@@ -30,4 +31,16 @@ class Sandwich extends AbstractPlate
     {
         return $this->id;
     }
+
+    public function isAvailable(): bool
+    {
+        return true;
+    }
+
+    public function typeOf(): string
+    {
+        return self::TYPE;
+    }
+
+
 }

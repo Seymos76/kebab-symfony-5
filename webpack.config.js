@@ -19,6 +19,7 @@ Encore
     //.setManifestKeyPrefix('build/')
     .addEntry('app', './assets/js/app.js')
     .addEntry('pwa', './assets/js/pwa.js')
+    .addEntry('bootstrap_layout', './assets/js/bootstrap_layout.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
     // will require an extra script tag for runtime.js

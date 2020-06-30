@@ -35,17 +35,21 @@ class PlateType extends AbstractType
                     'label' => 'Brochure (PDF file)',
 
                     // unmapped means that this field is not associated to any entity property
-                    'mapped' => false,
+                    'mapped' => true,
 
                     // make it optional so you don't have to re-upload the PDF file
                     // every time you edit the Product details
                     'required' => false,
 
+                    'attr' => [
+                        'base64' => true
+                    ],
+
                     // unmapped fields can't define their validation using annotations
                     // in the associated entity, so you can use the PHP constraint classes
                     'constraints' => [
                         new File([
-                            'maxSize' => '1024k',
+                            'maxSize' => '4096k',
                             'mimeTypes' => [
                                 self::TYPE_PNG,
                                 self::TYPE_JPEG,

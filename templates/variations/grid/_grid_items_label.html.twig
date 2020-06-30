@@ -1,4 +1,3 @@
-{{ dump(products) }}
 {% for p in products %}
 <div class="image bg-white rounded-lg shadow-lg h-350 overflow-hidden {{ p.type }}">
     <a href="{{ path('public_product') }}">
@@ -7,45 +6,3 @@
     </a>
 </div>
 {% endfor %}
-<div class="image bg-white rounded-lg shadow-lg h-350 overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/franchise-kebab.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" width="100%" height="350">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos sandwichs</span>
-    </a>
-</div>
-<div class="image bg-white rounded-lg shadow-lg h-350 overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/salade.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" width="100%">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos salades</span>
-    </a>
-</div>
-<div class="image bg-white rounded-lg shadow-lg h-350 overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/salade.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" width="100%">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos salades</span>
-    </a>
-</div>
-<div class="image bg-white rounded-lg shadow-lg h-350 overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/franchise-kebab.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" width="100%">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos formules</span>
-    </a>
-</div>
-<div class="image bg-white rounded-lg shadow-lg h-350 overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/franchise-kebab.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" width="100%">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos sandwichs</span>
-    </a>
-</div>
-<div class="image bg-white rounded-lg shadow-lg overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/salade.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" height="100%">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos salades</span>
-    </a>
-</div>
-<div class="image bg-white rounded-lg shadow-lg overflow-hidden">
-    <a href="{{ path('public_product') }}">
-        <img src="{{ asset('img/salade.jpg') }}" alt="Contact with Customer support" title="Contact with Customer support" height="100%">
-        <span class="text-center p-2 text-gray-700 text-sm inline-block w-full">Nos salades</span>
-    </a>
-</div>

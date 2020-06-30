@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Interfaces\SluggableInterface;
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductCategoryRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -10,11 +10,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ProductCategoryRepository::class)
  * @ORM\HasLifecycleCallbacks()
+ * @ApiResource()
  */
 class ProductCategory
 {
-    use PlatesTrait;
-
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -29,7 +28,7 @@ class ProductCategory
     private $label;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups({"public"})
      */
     private $slug;
@@ -38,7 +37,6 @@ class ProductCategory
     {
         $category = new self();
         $category->setLabel($label);
-        $category->setSlug($category->getStringSlug($label));
         return $category;
     }
 
@@ -66,7 +64,7 @@ class ProductCategory
 
     public function setSlug(?string $slug): self
     {
-        $this->slug = $this->getStringSlug($slug);
+        $this->slug = $slug;
 
         return $this;
     }

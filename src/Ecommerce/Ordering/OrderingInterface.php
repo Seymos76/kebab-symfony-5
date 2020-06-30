@@ -1,9 +1,15 @@
 <?php
 namespace App\Ecommerce\Ordering;
 
-interface OrderingInterface {
-    public function addProduct(array $product);
-    public function removeProduct(array $product);
-    public function setProductQuantity(int $product, int $qty);
-    public function emptyCart();
+use App\Entity\CartItem;
+
+interface OrderingInterface
+{
+    public function addProduct(CartItem $plate): self;
+
+    public function removeProduct(CartItem $plate): self;
+
+    public function emptyCart(): void;
+
+    public function countProducts(): int;
 }

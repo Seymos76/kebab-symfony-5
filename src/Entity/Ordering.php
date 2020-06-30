@@ -14,6 +14,11 @@ use App\Ecommerce\Ordering\OrderingInterface;
  */
 class Ordering extends AbstractOrdering implements OrderingInterface
 {
+    protected const STATUS_PAYMENT_WAITING = "waiting";
+    protected const STATUS_PAYMENT_AGAIN = "waiting again";
+    protected const STATUS_PAYMENT_SUCCESS = "payed";
+    protected const STATUS_PAYMENT_FAILURE = "failure";
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -23,7 +28,7 @@ class Ordering extends AbstractOrdering implements OrderingInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups({"public"})
+     * @Groups({"cart"})
      */
     protected $number;
 
@@ -34,11 +39,13 @@ class Ordering extends AbstractOrdering implements OrderingInterface
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"cart"})
      */
     private $amount;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"cart"})
      */
     private $tva;
 
@@ -55,23 +62,35 @@ class Ordering extends AbstractOrdering implements OrderingInterface
     /**
      * @ORM\ManyToOne(targetEntity=Customer::class, inversedBy="orderings")
      * @ORM\JoinColumn(nullable=true)
+     * @Groups({"cart"})
      */
     private $customer;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="integer", nullable=true)
      */
-    private $products;
+    private $fails;
+
+    /**
+     * @ORM\Column(type="string", length=50)
+     */
+    private $status;
+
+    /**
+     * @ORM\OneToMany(targetEntity=CartItem::class, mappedBy="ordering", orphanRemoval=true)
+     */
+    private $cartItems;
 
     public function __construct()
     {
         $this->number = uniqid();
         $this->createdAt = new \DateTime('now');
         $this->invoices = new ArrayCollection();
-        $this->products = new ArrayCollection();
         $this->amount = 0.0;
         $this->tva = 0.0;
         $this->ttc = 0.0;
+        $this->status = self::STATUS_PAYMENT_WAITING;
+        $this->cartItems = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,46 +165,6 @@ class Ordering extends AbstractOrdering implements OrderingInterface
         return $this;
     }
 
-    public function addProduct(array $product)
-    {
-        if(!$this->getProducts()->contains($product)) {
-            $this->getProducts()->add($product);
-        }
-        return $this->products;
-    }
-
-    public function removeProduct(array $product)
-    {
-        if($this->getProducts()->contains($product)) {
-            array_shift($product, $this->products);
-        }
-        return $this->products;
-    }
-
-    public function getProducts()
-    {
-        return $this->products;
-    }
-
-    public function setProductQuantity(int $product, int $qty)
-    {}
-
-    public function getProductQuantity()
-    {}
-
-    public function countProducts()
-    {
-        return $this->getProducts()->count();
-    }
-
-    public function emptyCart()
-    {
-        if($this->countProducts() > 0) {
-            $this->products = new ArrayCollection();
-        }
-        return $this->products;
-    }
-
     public function getAmount(): ?float
     {
         return $this->amount;
@@ -220,5 +199,78 @@ class Ordering extends AbstractOrdering implements OrderingInterface
         $this->ttc = $ttc;
 
         return $this;
+    }
+
+    public function getFails(): ?int
+    {
+        return $this->fails;
+    }
+
+    public function setFails(?int $fails): self
+    {
+        $this->fails = $fails;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|CartItem[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->cartItems;
+    }
+
+    public function addProduct(CartItem $cartItem): self
+    {
+        if (!$this->cartItems->contains($cartItem)) {
+            $this->cartItems[] = $cartItem;
+            $cartItem->setOrdering($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(CartItem $cartItem): self
+    {
+        if ($this->cartItems->contains($cartItem)) {
+            $this->cartItems->removeElement($cartItem);
+            // set the owning side to null (unless already changed)
+            if ($cartItem->getOrdering() === $this) {
+                $cartItem->setOrdering(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function emptyCart(): void
+    {
+        $this->cartItems->clear();
+    }
+
+    public function countProducts(): int
+    {
+        $count = 0;
+        /**
+         * @var int $key
+         * @var CartItem $item
+         */
+        foreach ($this->cartItems as $key => $item) {
+            $count += $item->getQuantity();
+        }
+        return $count;
     }
 }

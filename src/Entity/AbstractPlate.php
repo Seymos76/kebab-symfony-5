@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -44,12 +45,16 @@ abstract class AbstractPlate
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"public"})
      */
     protected $slug;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @var MediaObject|null
+     *
+     * @ORM\ManyToOne(targetEntity=MediaObject::class)
+     * @ORM\JoinColumn(nullable=true)
+     * @ApiProperty(iri="http://schema.org/image")
+     * @Groups({"public"})
      */
     protected $image;
 
@@ -126,6 +131,22 @@ abstract class AbstractPlate
         $this->formula = $formula;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @param mixed $slug
+     */
+    public function setSlug($slug): void
+    {
+        $this->slug = $slug;
     }
 
     public function getImage(): ?string

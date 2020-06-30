@@ -35,43 +35,37 @@ class ResetDatabaseCommand extends Command
     {
         $output->writeln("Suppression de la base de données...");
         // rm db
-        $this->dropDatabase();
+        //$this->runCmd('doctrine:database:drop', '-f');
+        //$this->dropDatabase();
         $output->writeln("Suppression successful.");
         // create db
-        $this->createDatabase();
+        //$this->createDatabase();
+        $this->runCmd('doctrine:database:create', null);
         $output->writeln("Database created.");
         // update schema
-        $this->updateSchema();
+        //$this->updateSchema();
+        $this->runCmd('doctrine:schema:update', '-f');
         $output->writeln("Schema updated.");
         // load fixtures
-        $this->loadFixtures();
+        //$this->loadFixtures();
+        $this->runCmd('doctrine:fixtures:load', '-n');
         $output->writeln("Fixtures loaded.");
         return Command::SUCCESS;
     }
 
-    private function runCmd(OutputInterface $output, string $name, bool $force)
+    private function runCmd(string $commandName, ?string $forceLabel = null)
     {
-        if ($force) {
-            $console = new Application($this->kernel);
-            $console->setAutoExit(false);
-            $input = new ArrayInput([
-                'command' => $name,
-                '-f' => $force
-            ]);
-            $ouput = new BufferedOutput();
-            $console->run($input, $ouput);
-            $content = $ouput->fetch();
-            dump($content);
-        } else {
-            $command = $this->getApplication()->find('doctrine:fixtures:load');
-            $args = [
-                '-n' => $force
-            ];
-            $input = new ArrayInput($args);
-            $returnCode = $command->run($input, $output);
-            dump($returnCode);
-            return Command::SUCCESS;
-        }
+        $console = new Application($this->kernel);
+        $console->setAutoExit(false);
+        $input = new ArrayInput([
+            'command' => $commandName,
+            $forceLabel => true
+        ]);
+        $ouput = new BufferedOutput();
+        $console->run($input, $ouput);
+        $content = $ouput->fetch();
+        dump($content);
+        return Command::SUCCESS;
     }
 
     protected function dropDatabase()
