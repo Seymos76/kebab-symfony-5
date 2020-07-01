@@ -1,4 +1,4 @@
-import { API_URL } from "../config/ApiConfig";
+import { API_PLATFORM as API_URL, API_CUSTOM } from "../config/ApiConfig";
 import axios from "axios";
 
 async function getAll() {
@@ -10,8 +10,8 @@ async function getAll() {
     }
 }
 
-async function create(config) {
-    return await axios.post(`${API_URL}/plates`, config)
+async function create(ajaxConfig) {
+    return await axios.post(`${API_CUSTOM}/plates/add`, ajaxConfig)
         .then(response => response.status)
         .catch(err => err.message);
 }

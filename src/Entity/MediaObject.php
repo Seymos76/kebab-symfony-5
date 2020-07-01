@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MediaObjectRepository;
 use App\Controller\API\CreateMediaObjectAPIController;
+use App\Controller\API\MediaObjectAPIController;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,7 +23,7 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *             "controller"=CreateMediaObjectAPIController::class,
  *             "deserialize"=false,
  *             "security"="is_granted('IS_AUTHENTICATED_ANONYMOUSLY')",
- *             "validation_groups"={"Default", "media_object_create"},
+ *             "validation_groups"={"media_object_create"},
  *             "openapi_context"={
  *                 "requestBody"={
  *                     "content"={
@@ -44,7 +45,11 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
  *         "get"
  *     },
  *     itemOperations={
- *         "get"
+ *         "get",
+ *         "post"={
+ *              "controller"=MediaObjectAPIController::class,
+ *              "validation_groups"={"media_object_create"},
+ *          }
  *     }
  * )
  */

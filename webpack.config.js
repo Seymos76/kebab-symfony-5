@@ -43,7 +43,7 @@ Encore
     .enableSassLoader(function (options) {}, {
         resolveUrlLoader: false
     })
-    //.enableTypeScriptLoader()
+    .enableTypeScriptLoader()
     .enableIntegrityHashes(Encore.isProduction())
     //.autoProvidejQuery()
     // uncomment if you use API Platform Admin (composer req api-admin)

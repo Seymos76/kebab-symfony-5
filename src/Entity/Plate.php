@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Interfaces\ProductInterface;
 use App\Repository\PlateRepository;
-use Cocur\Slugify\Slugify;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -27,7 +26,11 @@ use Doctrine\ORM\Mapping as ORM;
  *     "salad" = "Salad",
  *     "sandwich" = "Sandwich"
  * })
- * @ApiResource()
+ * @ApiResource(
+ *     itemOperations={
+ *          "get"={"path"="/api/plates/{id}"}
+ *     }
+ * )
  */
 class Plate extends AbstractPlate implements ProductInterface
 {

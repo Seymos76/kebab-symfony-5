@@ -19,7 +19,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class CheckoutAPIController
  * @package App\Controller\API
- * @Route(path="/api/checkout")
+ * @Route(path="/apic/checkout")
  */
 class CheckoutAPIController extends AbstractController
 {

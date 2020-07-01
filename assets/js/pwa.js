@@ -2,45 +2,60 @@ import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom";
 import ajax from "./utils/ajax";
 import PlateAPI from "./api/PlateAPI";
-import FileAPI from "./api/FileAPI";
-
-class Plate {
-    constructor(label, type, price) {
-        this.label = label;
-        this.type = type;
-        this.price = price;
-    }
-}
+import jsonMenus from './config/menu.json';
+import jsonTypes from './config/plateTypes.json';
+import Plate from "./models/plate";
+import Menu from "./models/menu";
+import PlateForm from "./forms/plateForm";
+import PlateType from "./models/plateType";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Pwa() {
-    const [plate, setPlate] = useState(
-        new Plate('Sandwich de saison', 'SANDWICH', 9.5)
-    );
-    const [file, setFile] = useState(null);
-    const [files, setFiles] = useState([]);
-    const [message, setMessage] = useState(null);
+    const [plate, setPlate] = useState({});
     const [plates, setPlates] = useState([]);
+    const [plateTypes, setPlateTypes] = useState([]);
+    const [menus, setMenus] = useState([]);
+    const [file, setFile] = useState(null);
+    const [base64File, setBase64File] = useState(null);
+    const [message, setMessage] = useState(null);
     const [loader, setLoader] = useState(false);
 
     useEffect(() => {
-        console.log('plate changed: ',plate);
-    },[plate]);
-
-    useEffect(() => {
+        loadTypes();
         loadPlates();
+        loadPlateForm();
+        loadMenus();
     },[]);
-
-    useEffect(() => {
-        //readFile()
-    },[files]);
 
     const loadPlates = async () => {
         try {
             const plates = await PlateAPI.getAll();
+            console.log(plates);
+            console.log(jsonMenus);
             setPlates(plates);
         } catch (e) {
             console.log('err',e);
         }
+    }
+
+    const loadPlateForm = () => {
+        let newPlate = new Plate('Sandwich de saison', 'SANDWICH', 9.5);
+        setPlate(newPlate);
+    }
+
+    const loadMenus = () => {
+        const menus = jsonMenus.map(menu => {
+            return new Menu(menu.id, menu.name, menu.promo, menu.price, menu.icon, menu.cat);;
+        });
+        console.log('menus',menus);
+        setMenus(menus);
+    }
+
+    const loadTypes = () => {
+        const types = jsonTypes.map(type => {
+            return new PlateType(type.id, type.name, type.value);
+        });
+        setPlateTypes(types);
     }
 
     const handleChange = ({ currentTarget }) => {
@@ -52,36 +67,24 @@ export default function Pwa() {
     const handleFile = event => {
         console.log(event.target.files[0]);
         setFile(event.target.files[0]);
-        readFile(event.target, 'file_to_upload');
-        //const status = FileAPI.createFile(data);
+        toBase64(event.target.files[0]);
+        //readFile(event.target, 'file_to_upload');
     }
 
-    const handleFiles = event => {
-        console.log(event.target.files);
-        const localFiles = event.target.files;
-        setFiles(localFiles);
-        localFiles.forEach(function (file) {
-            //const filesContainer = document.getElementById("files_to_upload");
-            //const img = document.createElement("IMG");
-            //filesContainer.append(img);
-            readFile(event.target, 'files_to_upload');
-        })
-    }
-
-    const handleSubmit = event => {
+    const handleSubmit = async event => {
         event.preventDefault();
-        createPlate();
+        await createPlate();
     }
 
-    const createPlate = () => {
+    const createPlate = async () => {
         let formData = new FormData();
-        formData.append('file',file);
-        formData.append('plate',plate);
-        for (let value of formData.values()) {
-            console.log(value);
-        }
-        const ajaxInit = ajax.initAjax("POST", new Headers(), formData);
-        const response = PlateAPI.create(ajaxInit);
+        formData.append('file',base64File);
+        formData.append('label',plate.label);
+        formData.append('type',plate.type);
+        formData.append('price',plate.price);
+        const ajaxInit = ajax.initAjax("POST", formData);
+        const response = await PlateAPI.create(ajaxInit);
+        console.log('create plate',response);
     }
 
     const readFile = (input, targetPreview) => {
@@ -92,44 +95,40 @@ export default function Pwa() {
                 let newPreview = document.getElementById(targetPreview);
                 newPreview.setAttribute('src', e.target.result);
             }
-            const base64 = reader.readAsDataURL(input.files[0]); // convert to base64 string
-            console.log(base64);
+            reader.readAsDataURL(input.files[0]);
         }
     }
 
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        //reader.onload = () => console.log(reader.result);
+        reader.onload = function(e) {
+            let newPreview = document.getElementById("file_to_upload");
+            newPreview.setAttribute('src', e.target.result);
+            setBase64File(reader.result);
+            console.log(reader.result);
+        }
+        reader.onerror = error => reject(error);
+    });
+
     return (
-        <>
+        <div className="container">
             <h1>PWA</h1>
             <h2>{message?.toUpperCase()}</h2>
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
-                <fieldset>
-                    <label htmlFor="label">LABEL</label>
-                    <input onChange={handleChange} value={plate.label} name={"label"} type="text"/>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="type">TYPE</label>
-                    <select onChange={handleChange} name="type" id="type" value={plate.type}>
-                        <option value="PLATE">Plate</option>
-                        <option value="SANDWICH">Sandwich</option>
-                    </select>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="price">PRICE</label>
-                    <input onChange={handleChange} value={plate.price} type="text" name={"price"}/>
-                </fieldset>
-                <fieldset>
-                    <label htmlFor="file">IMAGE</label>
-                    <input onChange={handleFile} name={"file"} type="file" id="file"/>
-                </fieldset>
-                {file && <img id={"file_to_upload"} src={"#"} alt={"Image"}/>}
-
-                <button type="submit">Envoyer</button>
-            </form>
+            <PlateForm
+                handleSubmit={handleSubmit}
+                handleChange={handleChange}
+                handleFile={handleFile}
+                plateTypes={plateTypes}
+                file={file}
+                plate={plate}
+            />
             {loader && <p>Loading...</p>}
             {!loader &&
-                plates?.map(plate => <p key={plate.id}>{plate.label}</p>)
+                menus?.map(menu => <p key={menu.id}>{menu.name}</p>)
             }
-        </>
+        </div>
     )
 }
 

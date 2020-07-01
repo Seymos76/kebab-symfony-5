@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 abstract class AbstractPlate
@@ -49,11 +50,10 @@ abstract class AbstractPlate
     protected $slug;
 
     /**
-     * @var MediaObject|null
+     * @var File|null
      *
      * @ORM\ManyToOne(targetEntity=MediaObject::class)
      * @ORM\JoinColumn(nullable=true)
-     * @ApiProperty(iri="http://schema.org/image")
      * @Groups({"public"})
      */
     protected $image;
@@ -149,12 +149,12 @@ abstract class AbstractPlate
         $this->slug = $slug;
     }
 
-    public function getImage(): ?string
+    public function getImage(): ?File
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(?File $image): self
     {
         $this->image = $image;
 

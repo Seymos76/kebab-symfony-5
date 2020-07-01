@@ -5,10 +5,13 @@ namespace App\Controller\API;
 
 
 use App\Ecommerce\Products\PlateCreator;
-use App\Entity\AbstractPlate;
 use App\Entity\Plate;
 use App\Repository\PlateRepository;
+use App\Uploader\Base64FileExtractor;
+use App\Uploader\FileRegistrator;
 use App\Uploader\ImageUploader;
+use App\Uploader\UploadedBase64File;
+use Cocur\Slugify\Slugify;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -17,11 +20,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * Class PlatesAPIController
  * @package App\Controller\API
- * @Route(path="/api/v2/plates")
+ * @Route(path="/apic/plates")
  */
 class PlatesAPIController extends AbstractController
 {
@@ -59,26 +65,29 @@ class PlatesAPIController extends AbstractController
     }
 
     /**
-     * @Route(path="/add", name="", methods={"POST"})
+     * @Route(path="/add", name="api_plate_create", methods={"POST"})
      * @param Request $request
      */
-    public function createPlate(Request $request, PlateCreator $plateCreator)
+    public function createPlate(
+        Request $request,
+        PlateCreator $plateCreator, FileRegistrator $fileRegistrator)
     {
-        $context = $this->getContext();
-        $file = $request->files->get('file');
-        dump($file);
         $content = json_decode($request->getContent(), true);
-        dump($content);
-        $plate = $plateCreator->createProduct($content['plate']);
-        //$newPlate = $this->serializer->deserialize($request->getContent(), Plate::class, 'json', $context);
+        /** @var Plate $plate */
+        $plate = $plateCreator->createProduct($content);
+        //dump('plate',$plate);
+        $base64File = $content["image"];
+        //dump('base64File',$base64File);
+        $slug = (new Slugify())->slugify($content["label"]);
+        $imageFile = $fileRegistrator->get($base64File, $slug);
+        //dump('uploadedbase64file',$imageFile);
+        //$newPlate = $this->serializer->deserialize($request->getContent(), Plate::class, 'json', $this->context);
+        //dump('newPlate serialized',$newPlate);
         if ($plate) {
-            die('here');
             // upload image
-            /** @var UploadedFile $brochureFile */
-            $brochureFile = $newPlate['image'];
-            $fileName = $this->imageUploader->handleFileUpload($brochureFile, $this->getParameter('upload_plates'));
+            $fileName = $this->imageUploader->upload($imageFile);
             // set image
-            $plate->setImage($fileName);
+            $plate->setImage($imageFile);
             // save Plate
             $this->entityManager->persist($plate);
             $this->entityManager->flush();

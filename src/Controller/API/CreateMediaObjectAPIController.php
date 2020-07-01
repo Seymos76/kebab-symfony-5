@@ -13,6 +13,7 @@ final class CreateMediaObjectAPIController
     public function __invoke(Request $request)
     {
         $uploadedFile = $request->files->get('file');
+        dd($request);
         if (!$uploadedFile) {
             throw new BadRequestHttpException('"file" is required');
         }

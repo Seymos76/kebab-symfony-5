@@ -17,7 +17,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 /**
  * Class CategoriesAPIController
  * @package App\Controller\API
- * @Route(path="/api/v2/categories")
+ * @Route(path="/apic/categories")
  */
 class CategoriesAPIController extends AbstractController
 {

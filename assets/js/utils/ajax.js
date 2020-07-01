@@ -1,33 +1,15 @@
 import axios from "axios";
 
-function initAjax(method, myHeaders, formData) {
+function initAjax(method, formData = null) {
+    const headers = new Headers();
+    headers.set('Access-Control-Allow-Origin', '*');
     return {
-        method: 'POST',
-        headers: myHeaders,
+        method,
+        headers,
         mode: 'cors',
-        body: JSON.stringify(formData),
+        body: formData ? formData : null,
         cache: 'default'
     };
-}
-
-function initAxios() {
-    return axios
-        .get(
-        '/user',
-        {
-            params: {
-                ID: 12345
-            }
-        })
-        .then(function (response) {
-            console.log(response);
-        })
-        .catch(function (error) {
-            console.log(error);
-        })
-        .then(function () {
-            // always executed
-        });
 }
 
 // later
